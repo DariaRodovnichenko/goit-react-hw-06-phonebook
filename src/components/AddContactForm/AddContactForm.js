@@ -1,3 +1,6 @@
+import { connect } from 'react-redux';
+import { addContact } from 'redux/contactsSlice';
+
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
@@ -22,7 +25,7 @@ const FormSchema = Yup.object().shape({
     .required('Required'),
 });
 
-export const AddContactForm = ({ onAdd }) => {
+const AddContactForm = ({ addContact }) => {
   return (
     <div>
       <Formik
@@ -32,7 +35,7 @@ export const AddContactForm = ({ onAdd }) => {
         }}
         validationSchema={FormSchema}
         onSubmit={(values, actions) => {
-          onAdd(values);
+          addContact(values.name, values.number);
           actions.resetForm();
         }}
       >
@@ -65,3 +68,11 @@ export const AddContactForm = ({ onAdd }) => {
     </div>
   );
 };
+
+const mapDispatchToProps = dispatch => ({
+  addContact: (name, number) => {
+    dispatch(addContact(name, number)); // Remove .prepare
+  },
+});
+
+export default connect(null, mapDispatchToProps)(AddContactForm);
